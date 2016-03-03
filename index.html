@@ -134,6 +134,9 @@ function about() {
 
   <script>
 
+    DalEq_lat = 32.800857
+    DalEq_lon = -96.819469
+
     // setup default min/max timer range for random draw
     attack_min = 100 ;
     attack_max = 2000 ;
@@ -371,8 +374,8 @@ function about() {
 
            var srclat = slatlong[src].lat;
            var srclong = slatlong[src].long;
-           var dstlat = slatlong[dst].lat;
-           var dstlong = slatlong[dst].long;
+           var dstlat = DalEq_lat;
+           var dstlong = DalEq_lon;
            which_attack = attack_type[Math.floor((Math.random() * attack_type.length))];
            var srccountry = slatlong[src]["country"];
            // "Hi, Mandiant!!"
