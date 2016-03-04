@@ -141,11 +141,6 @@ function about() {
     attack_min = 100 ;
     attack_max = 2000 ;
 
-    // add/change the attack types here
-    attack_type = [ "any port scan in a storm", "ssh brutish force", "Thought Leader Tweet",
-                    "SYN FLOOD BA-BY", "Spotty", "Heartbleed Hotel", "Po_ODLE", "Sharknado",
-                    "CORGI Attack", "Ping of DOOM", "Conficker", "Goldfinger", "SANDPAPER",
-                    "SNAILshock", "Spaghetti RAT", "Driduplex" ] ;
 
     // gotta add types here if you add more sounds (or delete them)
 
@@ -401,20 +396,17 @@ function about() {
            var dstlat = DalEq_lat;
            var dstlong = DalEq_lon;
            var srctag = 'Elbonia';
-           which_attack = attack_type[Math.floor((Math.random() * attack_type.length))];
            var srccountry = slatlong[src]["country"];
            // "Hi, Mandiant!!"
            if (typeof china_mode !== 'undefined') {
              srclat = cnlatlong[src].lat;
              srclong = cnlatlong[src].long;
-             if (cnlatlong[src].country=="chn") { which_attack = "ZOMGOSH CHINA!!!!!!"; }
              srccountry = cnlatlong[src]["country"];
            }
            // "Hi, Kim Jong!"
            else if (typeof dprk_mode !== 'undefined') {
              srclat = 39.0194;
              srclong = 125.7381;
-             which_attack = "ZOMG NORTH KOREAZ!!!";
              srccountry = "kp";
            }
            // source is always Chattanooga if chatt_mode is set
@@ -422,7 +414,6 @@ function about() {
            else if (typeof chatt_mode !== 'undefined') {
              srclat = 35.0456297;
              srclong = -85.30968;
-             which_attack = "OMG NATION STATE CHATTANOOGA!!!";
              srccountry = "usa";
            }
            // blame a former employee
@@ -430,10 +421,6 @@ function about() {
              if (typeof in_lat !== 'undefined' && typeof in_lon !== 'undefined') {
                srclat = in_lat;
                srclong = in_lon;
-             }
-             which_attack = "Former employee attack"
-             if (typeof employee_fname !== 'undefined' && typeof employee_lname !== 'undefined') {
-               which_attack += ":" + employee_fname + " " + employee_lname;
              }
              srccountry = "usa";
            }
@@ -501,8 +488,8 @@ function about() {
            rhcountry = rhcenter[this.whohas(rip)];
 
            if(rhcountry) {
-             srclat = rhcountry['lat'];
-             srclong= rhcountry['lon'];
+             srclat = rhcountry['lat'] + Math.random() * 10 - 5;
+             srclong= rhcountry['lon'] + Math.random() * 10 - 5;
              srctag = rhcountry['name'];
 
              hits.push( { origin : { latitude: +srclat, longitude: +srclong },
@@ -512,10 +499,10 @@ function about() {
              // add boom to the bubbles queue
 
              boom.push( { radius: 7, latitude: +dstlat, longitude: +dstlong,
-                        fillOpacity: 0.5, attk: which_attack} );
+                        fillOpacity: 0.5, attk: ''} );
              map.bubbles(boom, {
                 popupTemplate: function(geo, data) {
-                  return '<div class="hoverinfo">' + data.attk + '</div>';
+                  return '<div class="hoverinfo">' + '</div>';
                 }
              });
            } else {
@@ -525,7 +512,7 @@ function about() {
            $('#attackdiv').append(srccountry + " (" + rip + ") " + "[" + srctag + "]" +
                                   " <span style='color:red'>attacks</span> " +
                                   attackdiv_slatlong+  " (" + randomIP() + ") " +
-                                  " <span style='color:steelblue'>(" + which_attack + ")</span> " +
+                                  " <span style='color:steelblue'>(" + 'placeholder' + ")</span> " +
                                   "<br/>");
            $('#attackdiv').animate({scrollTop: $('#attackdiv').prop("scrollHeight")}, 500);
 
