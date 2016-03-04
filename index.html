@@ -313,6 +313,12 @@ function about() {
 
     // we read in a modified file of all country centers
     var centers = [] ;
+    var test987 = 1;
+    $.get("/dark1", function(data) {
+        test987 = data;
+      }, 'text');
+    // d3.csv("dark1", function(data) { testing123 = data; });
+    d3.json("countrygeo.json", function(data) { rhcenter = data; });
     d3.json("borders.json", function(data) { whois = data; });
     d3.tsv("country_centroids_primary.csv", function(data) { centers = data; });
     d3.csv("samplatlong.csv", function(data) { slatlong = data; });
@@ -394,6 +400,7 @@ function about() {
            var srclong = slatlong[src].long;
            var dstlat = DalEq_lat;
            var dstlong = DalEq_lon;
+           var srctag = 'Elbonia';
            which_attack = attack_type[Math.floor((Math.random() * attack_type.length))];
            var srccountry = slatlong[src]["country"];
            // "Hi, Mandiant!!"
@@ -489,23 +496,33 @@ function about() {
               dstlong = in_lon
            }
 
-           hits.push( { origin : { latitude: +srclat, longitude: +srclong },
+           // update the scrolling attack div
+           var rip = randomIP();
+           rhcountry = rhcenter[this.whohas(rip)];
+
+           if(rhcountry) {
+             srclat = rhcountry['lat'];
+             srclong= rhcountry['lon'];
+             srctag = rhcountry['name'];
+
+             hits.push( { origin : { latitude: +srclat, longitude: +srclong },
                         destination : { latitude: +dstlat, longitude: +dstlong } } );
-           map.arc(hits, {strokeWidth: 2, strokeColor: strokeColor});
+             map.arc(hits, {strokeWidth: 2, strokeColor: strokeColor});
 
-           // add boom to the bubbles queue
+             // add boom to the bubbles queue
 
-           boom.push( { radius: 7, latitude: +dstlat, longitude: +dstlong,
+             boom.push( { radius: 7, latitude: +dstlat, longitude: +dstlong,
                         fillOpacity: 0.5, attk: which_attack} );
-           map.bubbles(boom, {
+             map.bubbles(boom, {
                 popupTemplate: function(geo, data) {
                   return '<div class="hoverinfo">' + data.attk + '</div>';
                 }
-            });
+             });
+           } else {
+             // do something here
+           }
 
-           // update the scrolling attack div
-           var rip = randomIP();
-           $('#attackdiv').append(srccountry + " (" + rip + ") " + "[" + this.whohas(rip) + "]" +
+           $('#attackdiv').append(srccountry + " (" + rip + ") " + "[" + srctag + "]" +
                                   " <span style='color:red'>attacks</span> " +
                                   attackdiv_slatlong+  " (" + randomIP() + ") " +
                                   " <span style='color:steelblue'>(" + which_attack + ")</span> " +
